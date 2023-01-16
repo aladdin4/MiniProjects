@@ -10,30 +10,21 @@ namespace MiniProjects
     {
         static void Main(string[] args)
         {
-            // Deck test = new Deck();
-            //test.CreateDeck();
 
-            //for (int i = 0; i < test.fullDeck.Count; i++)
-            //{
-            //    Console.WriteLine(test.fullDeck[i]);
-                
-            //}
+            Poker myNewDeck = new Poker();
+            
             Console.ReadLine();
-
         }
-
     }
 
     public abstract class Deck
     {
-        //organised not shuffled
-        protected List<PlayingCard> fullDeck = new List<PlayingCard>();
-
-        //the fullDeck after shuffling -- the one we draw from
-        protected List<PlayingCard> drawPile = new List<PlayingCard>();
-
+        protected List<PlayingCard> fullDeck = new List<PlayingCard>(); //organised not shuffled
+        protected List<PlayingCard> drawPile = new List<PlayingCard>(); //the fullDeck after shuffling -- the one we draw from
         protected List<PlayingCard> discardPile = new List<PlayingCard>();
-        public void CreateDeck()
+
+
+        protected void CreateDeck()
         {
             fullDeck.Clear();
             for (int suit = 0; suit < 4; suit++)
@@ -43,15 +34,14 @@ namespace MiniProjects
                     fullDeck.Add(new PlayingCard { Suit = (CardSuit)suit, Value = (CardValue)val });
                 }
             }
-            
+
         }
         public virtual void ShuffleDeck()
         {
             var rnd = new Random();
             drawPile = fullDeck.OrderBy(card => rnd.Next()).ToList();
         }
-        public abstract PlayingCard DealCard(int numberOFCards);
-
+        public abstract List<PlayingCard> DealCards();
         public PlayingCard RequestCard()
         {
             var output = drawPile.Take(1).First();
@@ -66,11 +56,6 @@ namespace MiniProjects
     {
         public CardSuit Suit { get; set; }
         public CardValue Value { get; set; }
-
-        //public override string ToString()
-        //{
-        //    return $"{Value} of {Suit}";
-        //}
     }
     public enum CardSuit
     {
@@ -80,4 +65,29 @@ namespace MiniProjects
     {
         Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King
     }
+
+
+    public class Poker : Deck
+    {
+        public Poker()
+        {
+            CreateDeck();
+            ShuffleDeck();
+        }
+        public int MyProperty { get; set; }
+        public List<PlayingCard> cardDeal = new List<PlayingCard>();
+        public override List<PlayingCard> DealCards()
+        {
+
+            for (int numberOfCards = 0; numberOfCards < 5; numberOfCards++)
+            {
+                cardDeal.Add(RequestCard());
+            }
+            return cardDeal;
+        }
+
+    }
+
+
+
 }
